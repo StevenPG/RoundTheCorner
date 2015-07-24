@@ -10,13 +10,21 @@ Allowing for a hands free way to alert someone of your impending arrival.
 
 Application Flow:
 1. Short splash screen on first open
+
 2. Main screen that allows entry of information with finish button
+
 3. On finish button click, activity closes and notification appears when service begins
+
 4. notification displays distance and has cancel button
+
   4.1. Selecting cancel button closes notification and service
+
 5. When distance is within entered range, send text message
+
 6. Once text is sent, close notification and send new notification that states message was send, you are within x distance
+
 7. New notification will have cancel button or can be swiped away, at the point the application is completely gone.
+
 
 Needed Resources:
 - Google fuse location api
