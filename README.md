@@ -1,4 +1,4 @@
-# AroundTheCorner
+# AroundTheCorner V.01
 This repository will contain the work pertaining to the app titled AroundTheCorner.
 AroundTheCorner is an android application that allows a user to input a location, 
 a distance away from that location, and a phone number. The application will check 
