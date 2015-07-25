@@ -1,11 +1,10 @@
 package com.stevenpg.roundthecorner;
 
+import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,32 +12,27 @@ import android.widget.EditText;
 
 public class MainActivity extends ActionBarActivity {
 
-    // Save context for necessary areas
-    Context context = this;
-
-    // DAO for holding data to give to service
-    ServiceDAO data;
-
     // Button for global access
     Button button;
+
+    // Access to notification from service
+    NotificationManager notificationManager;
+    NotificationCompat.Builder builder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Assign button globally
         button = (Button)findViewById(R.id.StartButton);
     }
-
-    // Fill dao with dummy data
-    // get service working
-    // get notifications working
-    // then retrieve data
 
     // Validate inputs on button click
     public void ValidateFields(View v){
         this.button.setEnabled(false);
 
-        // Validate inputs
+        // Validate inputs, if any fail, short circuit
         boolean quit = false;
         if(ValidateAddress() == false ||
             ValidatePhoneNumber() == false ||
@@ -48,26 +42,54 @@ public class MainActivity extends ActionBarActivity {
         }
         else{
             // Everything should be good
-
-            // Fill DAO with dummy data after validation
-            Location currentLocation = new Location("CurrentLocation");
-            Location selectedLocation = new Location("SelectedLocation");
-            Integer distance = new Integer(50);
-            String message = "Hello, World!";
-            String phoneNumber = "123456789";
-            data = new ServiceDAO(currentLocation, selectedLocation, distance, message, phoneNumber);
-            data.printDAO();
-
-            StartServiceCloseActivity(data);
+            StartServiceCloseActivity();
         }
     }
 
+    // Start updating notification
+    public void update(){
+        // get distance, phone number, address, and message from user
+        // Create locationlistener that gets current gps
+        // create geocoding and get gps of location
+        // create text messenger object
+        // loop until distance < enteredDistance in thread
+        //      Then send text message to phone number select
+
+        // Thread that updates text in notification
+        // Also checks for distance and sends text when within range
+        Thread updater = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int iter = 0;
+                while(iter < 50) {
+                    builder.setContentText("Distance from Selected Address: " + iter + " mi");
+                    notificationManager.notify(0, builder.build());
+                    iter++;
+                }
+            }
+        });
+        updater.start();
+    }
+
     // Start service and close activity
-    public void StartServiceCloseActivity(ServiceDAO dao){
-        Intent intent = new Intent(context, UpdateServer.class);
-        intent.putExtra("DAO", dao.serialize());
-        this.startService(intent);
-        finish();
+    public void StartServiceCloseActivity(){
+
+        // Create notification here for updating in service
+        this.builder = new NotificationCompat.Builder(this)
+                        .setContentTitle("'Round The Corner Info")
+                        .setContentText("Distance from Selected Address: 0 mi")
+                        .setSmallIcon(R.drawable.icon);
+
+        // Actually generate notification
+        this.notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        this.notificationManager.notify(0, this.builder.build());
+
+        // Start updating the notification
+        update();
+
+        // Hide application and let thread run the notification updates
+        super.onBackPressed();
     }
 
     public boolean ValidateAddress(){
