@@ -1,15 +1,23 @@
 package com.stevenpg.roundthecorner;
 
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import java.io.IOException;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -21,6 +29,12 @@ public class MainActivity extends ActionBarActivity {
     NotificationManager notificationManager;
     NotificationCompat.Builder builder;
 
+    // Location services for re-use
+    MyGeoCoder myGeoCoder;
+    LocationManager locationManager;
+    MyLocationListener myLocationListener;
+    Location currentLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +42,14 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         // Assign button globally
         button = (Button)findViewById(R.id.StartButton);
+
+        // Check that GPS is on
+        isGPSOn();
+
+        // Create locationlistener that gets current gps
+        this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        this.myLocationListener = new MyLocationListener();
+        this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
     }
 
     // Validate inputs on button click
@@ -35,17 +57,35 @@ public class MainActivity extends ActionBarActivity {
         this.button.setEnabled(false);
 
         // Validate inputs, if any fail, short circuit
-        boolean quit = false;
-        if(ValidateAddress() == false ||
-            ValidatePhoneNumber() == false ||
-                    ValidateMessage() == false ||
-                    ValidateDistance() == false){
+        if(!ValidateAddress() || !ValidatePhoneNumber() ||
+                !ValidateMessage() || !ValidateDistance()){
             return;
         }
         else{
             // Everything should be good
             StartServiceCloseActivity();
         }
+    }
+
+    // Start service and close activity
+    public void StartServiceCloseActivity(){
+
+        // Create notification here for updating in service
+        this.builder = new NotificationCompat.Builder(this)
+                .setContentTitle("'Round The Corner Info")
+                .setContentText("Distance from Selected Address: 0 mi")
+                .setSmallIcon(R.drawable.icon);
+
+        // Actually generate notification
+        this.notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        this.notificationManager.notify(0, this.builder.build());
+
+        // Start updating the notification
+        update(this);
+
+        // Hide application and let thread run the notification updates
+        super.onBackPressed();
     }
 
     // Start updating notification
@@ -62,7 +102,7 @@ public class MainActivity extends ActionBarActivity {
         String message = msg.getText().toString();
 
         // create text messenger object
-        TextSender textSender = new TextSender(phoneNumber, message);
+        final TextSender textSender = new TextSender(phoneNumber, message);
 
         // Texting Elements End ---------------
 
@@ -70,60 +110,63 @@ public class MainActivity extends ActionBarActivity {
 
         // Get distance from user
         EditText distText = (EditText) findViewById(R.id.DistanceEdit);
-        int distance = Integer.parseInt(distText.getText().toString());
+        final int distance = Integer.parseInt(distText.getText().toString());
 
         // Get address from user
         EditText addr = (EditText)findViewById(R.id.AddressEdit);
         String address = addr.getText().toString();
-        // create geocoding and get gps of location
 
-        // Create locationlistener that gets current gps
+        // create geocoding and get gps of location
+        final Location selectedLocation = this.myGeoCoder.getCoords();
 
         // Save current distance between both GPS points
         int distanceBetweenPoints = 0;
 
         // Notification Elements End -----------------------
 
-
         // Thread that updates text in notification
         // Also checks for distance and sends text when within range, application then closed
         Thread updater = new Thread(new Runnable() {
             @Override
             public void run() {
-                int iter = 0;
-                // Loop until distance < distanceEntered
-                while(iter < 50) {
-                    builder.setContentText("Distance from Selected Address: " + iter + " mi");
+
+                // Set created distance var
+                double dist = Double.MAX_VALUE;
+
+                do{
+                    // Get Distance)
+                    Location cur = myLocationListener.getCurrentLocation();
+                    if(cur == null){
+                        try {
+                            Thread.sleep(300);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        continue;
+                    }
+
+                    // Get the new distance each time
+                    dist = cur.distanceTo(selectedLocation);
+
+                    // Wait 2 seconds between updates
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Set visuals
+                    builder.setContentText("Distance from Selected Address: " + dist + " meters");
                     notificationManager.notify(0, builder.build());
-                    iter++;
-                }
+                } while(dist > distance);
+
                 // send text before shutting everything down
+                textSender.sendText();
                 mainActivity.finish();
                 notificationManager.cancel(0);
             }
         });
         updater.start();
-    }
-
-    // Start service and close activity
-    public void StartServiceCloseActivity(){
-
-        // Create notification here for updating in service
-        this.builder = new NotificationCompat.Builder(this)
-                        .setContentTitle("'Round The Corner Info")
-                        .setContentText("Distance from Selected Address: 0 mi")
-                        .setSmallIcon(R.drawable.icon);
-
-        // Actually generate notification
-        this.notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
-        this.notificationManager.notify(0, this.builder.build());
-
-        // Start updating the notification
-        update(this);
-
-        // Hide application and let thread run the notification updates
-        super.onBackPressed();
     }
 
     public boolean ValidateAddress(){
@@ -132,6 +175,15 @@ public class MainActivity extends ActionBarActivity {
             validationFailed(addr, "Please Enter a Valid Address");
             return false;
         }
+        // Else, try to Geocode, report failure
+        try {
+            this.myGeoCoder = new MyGeoCoder(this, addr.getText().toString());
+        } catch (IOException e) {
+            Log.d("debug", e.getMessage());
+            validationFailed(addr, "GeoCoding failed... check Wi-Fi/Mobile Data");
+            return false;
+        }
+
         return true;
     }
 
@@ -187,6 +239,30 @@ public class MainActivity extends ActionBarActivity {
     public void validationFailed(EditText offendingField, String msg){
         offendingField.setText(msg);
         this.button.setEnabled(true);
+    }
+
+    // Check if GPS is running
+    public void isGPSOn(){
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            // Everything is good, do nothing
+            Log.d("debug", "GPS is enabled");
+        }
+        else{
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            Log.d("debug", "GPS is disabled");
+            alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+                    .setCancelable(false)
+                    .setPositiveButton("Goto Settings Page To Enable GPS",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent callGPSSettingIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    startActivity(callGPSSettingIntent);
+                                }
+                            });
+            AlertDialog alert = alertDialogBuilder.create();
+            alert.show();
+        }
     }
 }
 
