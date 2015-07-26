@@ -146,7 +146,13 @@ public class MainActivity extends ActionBarActivity {
                     }
 
                     // Get the new distance each time
-                    dist = cur.distanceTo(selectedLocation);
+                    if(cur != null) {
+                        dist = cur.distanceTo(selectedLocation);
+                    }
+                    else{
+                        builder.setContentText("Attempting to find GPS coverage...");
+                        notificationManager.notify(0, builder.build());
+                    }
 
                     // Wait 2 seconds between updates
                     try {
