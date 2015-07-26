@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.w3c.dom.Text;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -47,25 +49,57 @@ public class MainActivity extends ActionBarActivity {
     }
 
     // Start updating notification
-    public void update(){
-        // get distance, phone number, address, and message from user
-        // Create locationlistener that gets current gps
-        // create geocoding and get gps of location
+    public void update(final MainActivity mainActivity){
+
+        // Texting Elements Start -------------
+
+        // Get phone number from user
+        EditText phoneNum = (EditText)findViewById(R.id.PhoneNumberEdit);
+        String phoneNumber = phoneNum.getText().toString();
+
+        // Get message from user
+        EditText msg = (EditText)findViewById(R.id.MessageEdit);
+        String message = msg.getText().toString();
+
         // create text messenger object
-        // loop until distance < enteredDistance in thread
-        //      Then send text message to phone number select
+        TextSender textSender = new TextSender(phoneNumber, message);
+
+        // Texting Elements End ---------------
+
+        // Notification Elements Start-------------------
+
+        // Get distance from user
+        EditText distText = (EditText) findViewById(R.id.DistanceEdit);
+        int distance = Integer.parseInt(distText.getText().toString());
+
+        // Get address from user
+        EditText addr = (EditText)findViewById(R.id.AddressEdit);
+        String address = addr.getText().toString();
+        // create geocoding and get gps of location
+
+        // Create locationlistener that gets current gps
+
+        // Save current distance between both GPS points
+        int distanceBetweenPoints = 0;
+
+        // Notification Elements End -----------------------
+
 
         // Thread that updates text in notification
-        // Also checks for distance and sends text when within range
+        // Also checks for distance and sends text when within range, application then closed
         Thread updater = new Thread(new Runnable() {
             @Override
             public void run() {
                 int iter = 0;
+                // Loop until distance < distanceEntered
                 while(iter < 50) {
                     builder.setContentText("Distance from Selected Address: " + iter + " mi");
                     notificationManager.notify(0, builder.build());
                     iter++;
                 }
+                // send text before shutting everything down
+                mainActivity.finish();
+                notificationManager.cancel(0);
             }
         });
         updater.start();
@@ -86,7 +120,7 @@ public class MainActivity extends ActionBarActivity {
         this.notificationManager.notify(0, this.builder.build());
 
         // Start updating the notification
-        update();
+        update(this);
 
         // Hide application and let thread run the notification updates
         super.onBackPressed();
