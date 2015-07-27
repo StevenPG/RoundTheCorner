@@ -11,7 +11,7 @@ import android.util.Log;
  * location into just a simple method call for
  * the main activity.
  */
-public class MyLocationListener implements LocationListener {
+public class LocationListenerHandler implements LocationListener {
 
     private Location currentLocation;
 

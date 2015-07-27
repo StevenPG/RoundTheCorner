@@ -16,19 +16,25 @@ import java.util.Locale;
  * the gps coordinates of a location
  * using only the constructor.
  */
-public class MyGeoCoder {
+public class GeoCoderHandler {
 
     protected Location selectedLocation;
 
     // Constructor
     // Throws an IOException is the geocoder fails in any way
-    MyGeoCoder(Context context, String location) throws IOException{
+    GeoCoderHandler(Context context, String location) throws IOException{
+        // Create geocoder
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+
+        // Get exactly 1 location (first found)
         List<Address> addressList = geocoder.getFromLocationName(location, 1);
+
+        // Test for failure
         if(addressList == null || addressList.size() == 0){
             throw new IOException("Something went wrong while GeoCoding...");
         }
         else {
+            // Save location if everything worked
             Address address = addressList.get(0);
             selectedLocation = new Location("selectedLocation");
             selectedLocation.setLatitude(address.getLatitude());

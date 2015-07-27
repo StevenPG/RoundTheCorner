@@ -1,7 +1,8 @@
 package com.stevenpg.roundthecorner;
 
 import android.telephony.SmsManager;
-import android.util.Log;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Steven on 7/26/2015.
@@ -10,24 +11,38 @@ import android.util.Log;
  */
 public class TextSender {
 
-    public String phoneNumber;
-    public String msg;
+    List<TextRecipient> textRecipientList;
     private SmsManager smsManager;
 
-    TextSender(String phoneNumber, String msg){
-        this.phoneNumber = phoneNumber;
-        this.msg = msg;
+    // This constructor is used when there is exactly one TextRecipient
+    TextSender(TextRecipient textRecipient){
+        this.textRecipientList = new LinkedList<>();
+        this.textRecipientList.add(textRecipient);
         this.smsManager = SmsManager.getDefault();
     }
 
+    // This constructor is used when there is more than one TextRecipient
+    TextSender(List<TextRecipient> textRecipientList){
+        this.textRecipientList = textRecipientList;
+    }
+
     public void sendText(){
-        this.smsManager.sendTextMessage(this.phoneNumber, null, this.msg, null, null);
+        for(TextRecipient textRecipient : this.textRecipientList){
+            this.smsManager.sendTextMessage(
+                    textRecipient.getPhoneNumber(),null,
+                    textRecipient.getMessage(), null, null);
+        }
     }
 
-    // DELETE ME
-    public void debugSend(){
-        Log.d("debug", "If this is seen, delete this method!!!");
-        this.smsManager.sendTextMessage("6109456265", null, "Testing, 1, 2, 3", null, null);
-    }
+    // Static method to decrease coupling
+    // This method is given a list of strings, and returns a list of text recipients with same message
+    static public List<TextRecipient> generateRecipientsWithSameMessage(List<String> numbers, String message){
+        List<TextRecipient> textRecipientList = new LinkedList<>();
 
+        for(String number : numbers){
+            textRecipientList.add(new TextRecipient(number, message));
+        }
+
+        return textRecipientList;
+    }
 }

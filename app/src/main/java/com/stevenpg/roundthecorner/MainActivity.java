@@ -19,6 +19,7 @@ import android.widget.EditText;
 import java.io.IOException;
 
 
+@SuppressWarnings("deprecation")
 public class MainActivity extends ActionBarActivity {
 
     // Button for global access
@@ -29,10 +30,9 @@ public class MainActivity extends ActionBarActivity {
     NotificationCompat.Builder builder;
 
     // Location services for re-use
-    MyGeoCoder myGeoCoder;
+    GeoCoderHandler geoCoderHandler;
     LocationManager locationManager;
-    MyLocationListener myLocationListener;
-    Location currentLocation;
+    LocationListenerHandler locationListenerHandler;
 
 
     @Override
@@ -45,10 +45,10 @@ public class MainActivity extends ActionBarActivity {
         // Check that GPS is on
         isGPSOn();
 
-        // Create locationlistener that gets current gps
+        // Create location listener that gets current gps
         this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        this.myLocationListener = new MyLocationListener();
-        this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
+        this.locationListenerHandler = new LocationListenerHandler();
+        this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerHandler);
     }
 
     // Validate inputs on button click
@@ -58,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
         // Validate inputs, if any fail, short circuit
         if(!ValidateAddress() || !ValidatePhoneNumber() ||
                 !ValidateMessage() || !ValidateDistance()){
-            return;
+            Log.d("debug", "Everything has passed");
         }
         else{
             // Everything should be good
@@ -101,7 +101,7 @@ public class MainActivity extends ActionBarActivity {
         String message = msg.getText().toString();
 
         // create text messenger object
-        final TextSender textSender = new TextSender(phoneNumber, message);
+        final TextSender textSender = new TextSender(new TextRecipient(phoneNumber, message));
 
         // Texting Elements End ---------------
 
@@ -111,15 +111,8 @@ public class MainActivity extends ActionBarActivity {
         EditText distText = (EditText) findViewById(R.id.DistanceEdit);
         final int distance = Integer.parseInt(distText.getText().toString().trim());
 
-        // Get address from user
-        EditText addr = (EditText)findViewById(R.id.AddressEdit);
-        String address = addr.getText().toString();
-
         // create geocoding and get gps of location
-        final Location selectedLocation = this.myGeoCoder.getCoords();
-
-        // Save current distance between both GPS points
-        int distanceBetweenPoints = 0;
+        final Location selectedLocation = this.geoCoderHandler.getCoords();
 
         // Notification Elements End -----------------------
 
@@ -134,7 +127,7 @@ public class MainActivity extends ActionBarActivity {
 
                 do{
                     // Get Distance)
-                    Location cur = myLocationListener.getCurrentLocation();
+                    Location cur = locationListenerHandler.getCurrentLocation();
                     if(cur == null){
                         try {
                             Thread.sleep(300);
@@ -182,7 +175,7 @@ public class MainActivity extends ActionBarActivity {
         }
         // Else, try to Geocode, report failure
         try {
-            this.myGeoCoder = new MyGeoCoder(this, addr.getText().toString());
+            this.geoCoderHandler = new GeoCoderHandler(this, addr.getText().toString());
         } catch (IOException e) {
             Log.d("debug", e.getMessage());
             validationFailed(addr, "Error: check Wi-Fi/Mobile Data or Address");
