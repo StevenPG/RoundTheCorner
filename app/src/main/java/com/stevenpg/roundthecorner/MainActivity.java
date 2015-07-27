@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -95,7 +94,7 @@ public class MainActivity extends ActionBarActivity {
 
         // Get phone number from user
         EditText phoneNum = (EditText)findViewById(R.id.PhoneNumberEdit);
-        String phoneNumber = phoneNum.getText().toString();
+        String phoneNumber = phoneNum.getText().toString().trim();
 
         // Get message from user
         EditText msg = (EditText)findViewById(R.id.MessageEdit);
@@ -110,7 +109,7 @@ public class MainActivity extends ActionBarActivity {
 
         // Get distance from user
         EditText distText = (EditText) findViewById(R.id.DistanceEdit);
-        final int distance = Integer.parseInt(distText.getText().toString());
+        final int distance = Integer.parseInt(distText.getText().toString().trim());
 
         // Get address from user
         EditText addr = (EditText)findViewById(R.id.AddressEdit);
@@ -162,7 +161,7 @@ public class MainActivity extends ActionBarActivity {
                     }
 
                     // Set visuals
-                    builder.setContentText("Distance from Selected Address: " + dist + " meters");
+                    builder.setContentText("Distance from Selected Address: \n" + dist + " meters");
                     notificationManager.notify(0, builder.build());
                 } while(dist > distance);
 
@@ -186,7 +185,7 @@ public class MainActivity extends ActionBarActivity {
             this.myGeoCoder = new MyGeoCoder(this, addr.getText().toString());
         } catch (IOException e) {
             Log.d("debug", e.getMessage());
-            validationFailed(addr, "GeoCoding failed... check Wi-Fi/Mobile Data");
+            validationFailed(addr, "Error: check Wi-Fi/Mobile Data or Address");
             return false;
         }
 
@@ -195,7 +194,7 @@ public class MainActivity extends ActionBarActivity {
 
     public boolean ValidateDistance(){
         EditText distance = (EditText)findViewById(R.id.DistanceEdit);
-        String dist = distance.getText().toString();
+        String dist = distance.getText().toString().trim();
 
         if("".equals(dist)){
             validationFailed(distance, "Please Enter a Valid Distance");
@@ -213,7 +212,7 @@ public class MainActivity extends ActionBarActivity {
 
     public boolean ValidatePhoneNumber(){
         EditText phoneNumber = (EditText)findViewById(R.id.PhoneNumberEdit);
-        String phoneNum = phoneNumber.getText().toString();
+        String phoneNum = phoneNumber.getText().toString().trim();
 
         // Remove all dashes and underscores
         phoneNum = phoneNum.replaceAll("-", "");

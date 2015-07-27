@@ -25,8 +25,7 @@
         android:id="@+id/PhoneNumberLabel"
         android:textColor="#ffffffff"
         android:layout_below="@+id/AddressEdit"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="42dp" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,7 +34,7 @@
         android:text="Message"
         android:id="@+id/Message"
         android:textColor="#ffffffff"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/DistanceEdit"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -45,9 +44,8 @@
         android:text="Distance in Meters"
         android:id="@+id/Distance"
         android:textColor="#ffffffff"
-        android:layout_below="@+id/Message"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="72dp" />
+        android:layout_below="@+id/PhoneNumberEdit"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -65,6 +63,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/AddressEdit"
+        android:maxLines="1"
+        android:inputType="textPostalAddress"
         android:layout_below="@+id/AddressLabel"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -76,6 +76,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/PhoneNumberEdit"
+        android:inputType="number"
+        android:maxLines="1"
         android:layout_below="@+id/PhoneNumberLabel"
         android:layout_alignRight="@+id/AddressEdit"
         android:layout_alignEnd="@+id/AddressEdit"
@@ -87,23 +89,27 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/MessageEdit"
-        android:layout_below="@+id/Message"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textColor="#ffffffff" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/DistanceEdit"
+        android:inputType="number"
+        android:maxLines="1"
+        android:textColor="#ffffffff"
         android:layout_below="@+id/Distance"
         android:layout_alignRight="@+id/MessageEdit"
         android:layout_alignEnd="@+id/MessageEdit"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textColor="#ffffffff" />
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/MessageEdit"
+        android:inputType="text"
+        android:scrollHorizontally="false"
+        android:textColor="#ffffffff"
+        android:layout_below="@+id/Message"
+        android:layout_alignRight="@+id/PhoneNumberEdit"
+        android:layout_alignEnd="@+id/PhoneNumberEdit"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
