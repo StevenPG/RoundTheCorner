@@ -18,17 +18,21 @@ public class UpdaterService extends IntentService {
         // Retrieve data string from incoming Intent
         String data = workIntent.getDataString();
 
-        // Do work here
-        for(int i = 0; i < 400; i++) {
-            Log.d("oneoff", "Service is running!");
-        }
+        // Retrieve data
+        // create text sender
+        // create notification
+        // create location services
+        // Once everything is working
+            // start looping by distance
+
+
+        // Close activity and service when finished
+        Log.d("debugger", "Sending broadcast");
+        sendBroadcast(new Intent("UpdateServiceSaysClose"));
+        stopSelf();
     }
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     * @param name Used to name the worker thread, important only for debugging.
-     */
-    public UpdaterService(String name) {
-        super(name);
+    public UpdaterService() {
+        super("UpdaterService");
     }
 }

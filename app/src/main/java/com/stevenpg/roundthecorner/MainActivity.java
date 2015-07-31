@@ -1,9 +1,11 @@
 package com.stevenpg.roundthecorner;
 
 import android.app.AlertDialog;
-import android.app.IntentService;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationManager;
 import android.provider.Settings;
@@ -24,21 +26,6 @@ public class MainActivity extends ActionBarActivity {
     // ButtonHandler for global access and clean interaction
     ButtonHandler button;
 
-    // Access to notification
-    // TODO DELETE ME WHEN NEW FUNCTIONALITY WORKS
-    NotificationHandler notificationHandler;
-
-    // Location services for re-use
-    GeoCoderHandler geoCoderHandler;
-
-    // TODO DELETE ME WHEN NEW FUNCTIONALITY WORKS
-    LocationManager locationManager;
-    LocationListenerHandler locationListenerHandler;
-
-    // Create the text message handler to send messages
-    //TODO DELETE ME WHEN NEW FUNCTIONALITY WORKS
-    TextSender textSender = null;
-
     /**
      * Runs when activity starts
      */
@@ -53,10 +40,19 @@ public class MainActivity extends ActionBarActivity {
         // Check that GPS is on
         isGPSOn();
 
-        // Create location listener that gets current gps
-        this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        this.locationListenerHandler = new LocationListenerHandler();
-        this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerHandler);
+        // Create the broadcast receiver and define properties
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d("debugger", "Received broadcast");
+                finish();
+                unregisterReceiver(this);
+                System.exit(0);
+            }
+        };
+
+        // Register the receiver with this activity so the service can command it
+        registerReceiver(broadcastReceiver, new IntentFilter("UpdateServiceSaysClose"));
     }
 
     // Function that kicks off everything on button click
@@ -103,107 +99,15 @@ public class MainActivity extends ActionBarActivity {
             intentService.putExtras(b);
             startService(intentService);
 
-            for(int i = 0; i < 400; i++){
-                Log.d("oneoff", "Did service start? Is it running while activity runs?");
-            }
-
-            // Temporary debug to test service
-            //StartServiceCloseActivity();
+            // Hide activity and start service
+            super.onBackPressed();
+            Log.d("debugger", "Hiding activity");
         }
     }
 
-    // Start service and close activity
-    public void StartServiceCloseActivity(){
-
-        // Create notification
-        this.notificationHandler = new NotificationHandler(this, "'Round The Corner Info",
-                "Distance from Destination: 0 mi");
-
-        // Start updating the notification
-        update(this);
-
-        // Hide application and let thread run the notification updates
-        super.onBackPressed();
-    }
-
-    // Start updating notification
-    public void update(final MainActivity mainActivity){
-
-        // Texting Elements Start -------------
-
-        // Get phone number from user
-        EditText phoneNum = (EditText)findViewById(R.id.PhoneNumberEdit);
-        String phoneNumber = phoneNum.getText().toString().trim();
-
-        // Get message from user
-        EditText msg = (EditText)findViewById(R.id.MessageEdit);
-        String message = msg.getText().toString();
-
-        // create text messenger object
-        this.textSender = new TextSender(new TextRecipient(phoneNumber, message));
-
-        // Texting Elements End ---------------
-
-        // Notification Elements Start-------------------
-
-        // Get distance from user
-        EditText distText = (EditText) findViewById(R.id.DistanceEdit);
-        final int distance = Integer.parseInt(distText.getText().toString().trim());
-
-        // create geocoding and get gps of location
-        final Location selectedLocation = this.geoCoderHandler.getCoords();
-
-        // Notification Elements End -----------------------
-
-        // Thread that updates text in notification
-        // Also checks for distance and sends text when within range, application then closed
-        Thread updater = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                // Set created distance var
-                double dist = Double.MAX_VALUE;
-
-                do{
-                    // Get Distance)
-                    Location cur = locationListenerHandler.getCurrentLocation();
-                    if(cur == null){
-                        try {
-                            Thread.sleep(300);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        continue;
-                    }
-
-                    // Get the new distance each time
-                    if(cur != null) {
-                        dist = cur.distanceTo(selectedLocation);
-                    }
-                    else{
-                        notificationHandler.updateNotificationText("Attempting to find GPS coverage...");
-                    }
-
-                    // Wait 2 seconds between updates
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    // Set new notification text
-                    notificationHandler.updateNotificationText("Distance from Selected Address: \n" +
-                            "\" + dist + \" meters");
-
-                } while(dist > distance);
-
-                // send text before shutting everything down
-                textSender.sendText();
-                mainActivity.finish();
-                notificationHandler.closeNotification();
-            }
-        });
-        updater.start();
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
     }
 
     // Check if GPS is running
@@ -218,7 +122,7 @@ public class MainActivity extends ActionBarActivity {
             Log.d("debug", "GPS is disabled");
             alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
                     .setCancelable(false)
-                    .setPositiveButton("Goto Settings Page To Enable GPS",
+                    .setPositiveButton("Go To Settings Page To Enable GPS",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Intent callGPSSettingIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
