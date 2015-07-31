@@ -20,7 +20,11 @@ public class Validator {
     private String message;
     private Context context;
 
+    // If nonzero is returned, ask for this error-string directly
+    public String errorMessage;
+
     // GeoCoderHandler for post-validation use
+    // Retrieve this value immedietly after verification
     private GeoCoderHandler geoCoderHandler;
 
     // Constructor just saves necessary data. Actual validation is called manually
@@ -30,6 +34,7 @@ public class Validator {
         this.distance = distance;
         this.message = message;
         this.context = context;
+        errorMessage = "";
     }
 
     /**

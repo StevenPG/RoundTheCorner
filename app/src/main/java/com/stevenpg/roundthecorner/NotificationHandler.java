@@ -20,11 +20,12 @@ public class NotificationHandler {
     Context context;
 
     // Build and display the notification
-    NotificationHandler(Context context, String title, String contextText){
+    NotificationHandler(Context context, String title, String contentText){
         this.context = context;
         this.builder = new NotificationCompat.Builder(context)
                 .setContentTitle(title)
-                .setContentText(contextText);
+                .setContentText(contentText)
+                .setSmallIcon(R.drawable.icon);
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         this.notificationManager.notify(notificationID, this.builder.build());
     }
@@ -32,6 +33,10 @@ public class NotificationHandler {
     public void updateNotificationText(String updatedMessage){
         this.builder.setContentText(updatedMessage);
         this.notificationManager.notify(notificationID, this.builder.build());
+    }
+
+    public void closeNotification(){
+        this.notificationManager.cancel(this.notificationID);
     }
 
 }

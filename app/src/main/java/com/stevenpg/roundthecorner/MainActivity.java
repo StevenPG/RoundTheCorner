@@ -1,8 +1,7 @@
 package com.stevenpg.roundthecorner;
 
 import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.content.Context;
+import android.app.IntentService;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
@@ -10,37 +9,46 @@ import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.io.IOException;
-
 
 @SuppressWarnings("deprecation")
 public class MainActivity extends ActionBarActivity {
 
-    // Button for global access
-    Button button;
+    // Intent service
+    Intent intentService;
 
-    // Access to notification from service
-    NotificationManager notificationManager;
-    NotificationCompat.Builder builder;
+    // ButtonHandler for global access and clean interaction
+    ButtonHandler button;
+
+    // Access to notification
+    // TODO DELETE ME WHEN NEW FUNCTIONALITY WORKS
+    NotificationHandler notificationHandler;
 
     // Location services for re-use
     GeoCoderHandler geoCoderHandler;
+
+    // TODO DELETE ME WHEN NEW FUNCTIONALITY WORKS
     LocationManager locationManager;
     LocationListenerHandler locationListenerHandler;
 
+    // Create the text message handler to send messages
+    //TODO DELETE ME WHEN NEW FUNCTIONALITY WORKS
+    TextSender textSender = null;
 
+    /**
+     * Runs when activity starts
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         // Assign button globally
-        button = (Button)findViewById(R.id.StartButton);
+        button = new ButtonHandler((Button)findViewById(R.id.StartButton));
 
         // Check that GPS is on
         isGPSOn();
@@ -51,34 +59,65 @@ public class MainActivity extends ActionBarActivity {
         this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerHandler);
     }
 
-    // Validate inputs on button click
-    public void ValidateFields(View v){
-        this.button.setEnabled(false);
+    // Function that kicks off everything on button click
+    public void buttonClick(View v ){
+        this.button.disable();
 
-        // Validate inputs, if any fail, short circuit
-        if(!ValidateAddress() || !ValidatePhoneNumber() ||
-                !ValidateMessage() || !ValidateDistance()){
-            Log.d("debug", "Everything has passed");
+        // retrieve all UI elements relevant
+        EditText addr = (EditText)findViewById(R.id.AddressEdit);
+        EditText distance = (EditText)findViewById(R.id.DistanceEdit);
+        EditText phoneNumber = (EditText)findViewById(R.id.PhoneNumberEdit);
+        EditText msg = (EditText)findViewById(R.id.MessageEdit);
+
+        // Save into string for validation and transfer to service
+        String address = addr.getText().toString();
+        String phoneNum = phoneNumber.getText().toString();
+        String message = msg.getText().toString();
+        String dist = distance.getText().toString();
+
+        Validator validator = new Validator( address,
+                phoneNum, dist, message, this);
+        if(validator.performValidation() != 0){
+            Log.d("debug", "validation failed: " + validator.errorMessage);
+            // Print error in field and handle with error message (maybe toast?)
+            this.button.enable();
         }
         else{
-            // Everything should be good
-            StartServiceCloseActivity();
+            // Get a location object from geocode handler
+            GeoCoderHandler geoCoderHandler = validator.getGeoCoderHandler();
+            Location location = geoCoderHandler.getCoords();
+
+            // Assign all values into data access object
+            ServiceDAO serviceDAO = new ServiceDAO(
+                    Double.toString(location.getLatitude()),
+                    Double.toString(location.getLongitude()),
+                    phoneNum,
+                    message,
+                    dist
+            );
+
+            // Set the data and start intent service
+            intentService = new Intent(this, UpdaterService.class);
+            Bundle b = new Bundle();
+            b.putParcelable("DAO", serviceDAO);
+            intentService.putExtras(b);
+            startService(intentService);
+
+            for(int i = 0; i < 400; i++){
+                Log.d("oneoff", "Did service start? Is it running while activity runs?");
+            }
+
+            // Temporary debug to test service
+            //StartServiceCloseActivity();
         }
     }
 
     // Start service and close activity
     public void StartServiceCloseActivity(){
 
-        // Create notification here for updating in service
-        this.builder = new NotificationCompat.Builder(this)
-                .setContentTitle("'Round The Corner Info")
-                .setContentText("Distance from Selected Address: 0 mi")
-                .setSmallIcon(R.drawable.icon);
-
-        // Actually generate notification
-        this.notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
-        this.notificationManager.notify(0, this.builder.build());
+        // Create notification
+        this.notificationHandler = new NotificationHandler(this, "'Round The Corner Info",
+                "Distance from Destination: 0 mi");
 
         // Start updating the notification
         update(this);
@@ -101,7 +140,7 @@ public class MainActivity extends ActionBarActivity {
         String message = msg.getText().toString();
 
         // create text messenger object
-        final TextSender textSender = new TextSender(new TextRecipient(phoneNumber, message));
+        this.textSender = new TextSender(new TextRecipient(phoneNumber, message));
 
         // Texting Elements End ---------------
 
@@ -142,8 +181,7 @@ public class MainActivity extends ActionBarActivity {
                         dist = cur.distanceTo(selectedLocation);
                     }
                     else{
-                        builder.setContentText("Attempting to find GPS coverage...");
-                        notificationManager.notify(0, builder.build());
+                        notificationHandler.updateNotificationText("Attempting to find GPS coverage...");
                     }
 
                     // Wait 2 seconds between updates
@@ -153,90 +191,19 @@ public class MainActivity extends ActionBarActivity {
                         e.printStackTrace();
                     }
 
-                    // Set visuals
-                    builder.setContentText("Distance from Selected Address: \n" + dist + " meters");
-                    notificationManager.notify(0, builder.build());
+                    // Set new notification text
+                    notificationHandler.updateNotificationText("Distance from Selected Address: \n" +
+                            "\" + dist + \" meters");
+
                 } while(dist > distance);
 
                 // send text before shutting everything down
                 textSender.sendText();
                 mainActivity.finish();
-                notificationManager.cancel(0);
+                notificationHandler.closeNotification();
             }
         });
         updater.start();
-    }
-
-    public boolean ValidateAddress(){
-        EditText addr = (EditText)findViewById(R.id.AddressEdit);
-        if("".equals(addr.getText().toString())){
-            validationFailed(addr, "Please Enter a Valid Address");
-            return false;
-        }
-        // Else, try to Geocode, report failure
-        try {
-            this.geoCoderHandler = new GeoCoderHandler(this, addr.getText().toString());
-        } catch (IOException e) {
-            Log.d("debug", e.getMessage());
-            validationFailed(addr, "Error: check Wi-Fi/Mobile Data or Address");
-            return false;
-        }
-
-        return true;
-    }
-
-    public boolean ValidateDistance(){
-        EditText distance = (EditText)findViewById(R.id.DistanceEdit);
-        String dist = distance.getText().toString().trim();
-
-        if("".equals(dist)){
-            validationFailed(distance, "Please Enter a Valid Distance");
-            return false;
-        }
-
-        for(int i = 0; i < dist.length(); i++){
-            if(!Character.isDigit(dist.charAt(i))) {
-                validationFailed(distance, "Please Enter a Valid Distance");
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean ValidatePhoneNumber(){
-        EditText phoneNumber = (EditText)findViewById(R.id.PhoneNumberEdit);
-        String phoneNum = phoneNumber.getText().toString().trim();
-
-        // Remove all dashes and underscores
-        phoneNum = phoneNum.replaceAll("-", "");
-
-        if("".equals(phoneNum)){
-            validationFailed(phoneNumber, "Please Enter a Valid Phone Number");
-            return false;
-        }
-
-        for(int i = 0; i < phoneNum.length(); i++){
-            if(!Character.isDigit(phoneNum.charAt(i))) {
-                validationFailed(phoneNumber, "Please Enter a Valid Phone Number");
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean ValidateMessage(){
-        EditText msg = (EditText)findViewById(R.id.MessageEdit);
-        if("".equals(msg.getText().toString())){
-            validationFailed(msg, "Please Enter a Message");
-            return false;
-        }
-        return true;
-    }
-
-    // If validation failed
-    public void validationFailed(EditText offendingField, String msg){
-        offendingField.setText(msg);
-        this.button.setEnabled(true);
     }
 
     // Check if GPS is running

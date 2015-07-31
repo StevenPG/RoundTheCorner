@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:text="Start"
         android:id="@+id/StartButton"
-        android:onClick="ValidateFields"
+        android:onClick="buttonClick"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/DistanceEdit"
         android:layout_alignEnd="@+id/DistanceEdit"
