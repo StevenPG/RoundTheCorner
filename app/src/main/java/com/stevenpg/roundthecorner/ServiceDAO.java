@@ -1,9 +1,8 @@
 package com.stevenpg.roundthecorner;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import java.io.Serializable;
 
 /**
  * Created by Steven on 7/31/2015.
@@ -12,16 +11,12 @@ import java.io.Serializable;
  */
 public class ServiceDAO implements Parcelable{
 
-    // Complex objects
-    public GeoCoderHandler geoCoderHandler;
-    public TextSender textSender;
-
     // Simple types
+    public String latitude;
+    public String longitude;
     public String phoneNumber;
     public String message;
     public String distance;
-    public String latitude;
-    public String longitude;
 
     ServiceDAO(String latitude,
                String longitude,
@@ -33,13 +28,16 @@ public class ServiceDAO implements Parcelable{
         this.phoneNumber = phoneNumber;
         this.message = message;
         this.distance = distance;
-
-        this.textSender = new TextSender(new TextRecipient(phoneNumber, message));
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public static ServiceDAO readFromParcel(Parcel in){
+        String latitude = in.readString();
+        String longitude = in.readString();
+        String phoneNumber = in.readString();
+        String message = in.readString();
+        String distance = in.readString();
+        return new ServiceDAO(latitude, longitude,
+                phoneNumber, message, distance);
     }
 
     @Override
@@ -50,4 +48,23 @@ public class ServiceDAO implements Parcelable{
         dest.writeString(this.message);
         dest.writeString(this.distance);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    // Required field because dev forgot Java doesn't have multiple inheritance
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+
+        @Override
+        public Object createFromParcel(Parcel source) {
+            return readFromParcel(source);
+        }
+
+        @Override
+        public Object[] newArray(int size) {
+            return new Object[0];
+        }
+    };
 }

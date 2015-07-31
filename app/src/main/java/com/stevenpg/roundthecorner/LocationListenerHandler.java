@@ -15,12 +15,17 @@ public class LocationListenerHandler implements LocationListener {
 
     private Location currentLocation;
 
+    LocationListenerHandler(){
+        currentLocation = new Location("null");
+    }
+
     @Override
     public void onLocationChanged(Location location) {
         Log.d("debug", location.getLatitude() + ", " + location.getLongitude());
-        currentLocation = new Location("CurrentLocation");
+        currentLocation = new Location("Available");
         currentLocation.setLatitude(location.getLatitude());
         currentLocation.setLongitude(location.getLongitude());
+        currentLocation.setAccuracy(location.getAccuracy());
     }
 
     public Location getCurrentLocation(){
@@ -29,7 +34,12 @@ public class LocationListenerHandler implements LocationListener {
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
+        if(status == 0){
+            currentLocation.setProvider("GPS Temporarily Unavailable");
+        }
+        if(status == 2){
+            currentLocation.setProvider("Available");
+        }
     }
 
     @Override
