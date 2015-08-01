@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -26,6 +28,9 @@ public class MainActivity extends ActionBarActivity {
     // ButtonHandler for global access and clean interaction
     ButtonHandler button;
 
+    // Broadcaster for use in other methods
+    BroadcastReceiver broadcastReceiver;
+
     /**
      * Runs when activity starts
      */
@@ -40,8 +45,11 @@ public class MainActivity extends ActionBarActivity {
         // Check that GPS is on
         isGPSOn();
 
+        // Check that one network provider is on
+        isNetworkOn();
+
         // Create the broadcast receiver and define properties
-        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        this.broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d("debugger", "Received broadcast");
@@ -59,13 +67,13 @@ public class MainActivity extends ActionBarActivity {
         this.button.disable();
 
         // retrieve all UI elements relevant
-        EditText addr = (EditText)findViewById(R.id.AddressEdit);
+        EditText addressTxt = (EditText)findViewById(R.id.AddressEdit);
         EditText distance = (EditText)findViewById(R.id.DistanceEdit);
         EditText phoneNumber = (EditText)findViewById(R.id.PhoneNumberEdit);
         EditText msg = (EditText)findViewById(R.id.MessageEdit);
 
         // Save into string for validation and transfer to service
-        String address = addr.getText().toString();
+        String address = addressTxt.getText().toString();
         String phoneNum = phoneNumber.getText().toString();
         String message = msg.getText().toString();
         String dist = distance.getText().toString();
@@ -107,6 +115,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        unregisterReceiver(this.broadcastReceiver);
     }
 
     // Check if GPS is running
@@ -131,6 +140,42 @@ public class MainActivity extends ActionBarActivity {
             AlertDialog alert = alertDialogBuilder.create();
             alert.show();
         }
+    }
+
+    // Test if Wi-Fi or Mobile data are on for GeoCoding
+    public void isNetworkOn(){
+
+        // Test Wi-Fi
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if(!wifiInfo.isConnected() && !networkInfo.isConnected()) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            Log.d("debug", "GPS is disabled");
+            alertDialogBuilder.setMessage("Internet Access Not Found. Please enable Wi-Fi or Mobile Data.")
+                    .setCancelable(false)
+                    .setPositiveButton("Enable Wi-Fi",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent callGPSSettingIntent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                                    startActivity(callGPSSettingIntent);
+                                }
+                            })
+                    .setNegativeButton("Enable Mobile Data",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent callMobileDataIntent = new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS);
+                                    startActivity(callMobileDataIntent);
+                                }
+                            })
+                    .setIcon(android.R.drawable.ic_dialog_alert);
+            AlertDialog alert = alertDialogBuilder.create();
+            alert.show();
+        }
+        // Otherwise one must be enabled
     }
 }
 

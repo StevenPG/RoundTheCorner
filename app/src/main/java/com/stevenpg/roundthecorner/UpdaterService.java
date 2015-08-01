@@ -3,8 +3,14 @@ package com.stevenpg.roundthecorner;
 import android.app.IntentService;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationManager;
+import android.os.Bundle;
 import android.util.Log;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 /**
  * Created by Steven on 7/31/2015.
@@ -12,11 +18,27 @@ import android.util.Log;
  * consistently update the gps coordinates.
  * Alleviating any issues with running background
  * processes in the background.
+ * This service implements the necessary interfaces
+ * to directly interface with the GoogleApiClient
+ * for significantly more accurate location options.
  */
-public class UpdaterService extends IntentService {
+public class UpdaterService extends IntentService implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        com.google.android.gms.location.LocationListener{
+
+    // Location-based fields
+    GoogleApiClient googleApiClient = null;
+    LocationRequest locationRequest;
+    Location currentLocation;
+    boolean connected = false;
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
+
+        // Kick off google services
+        buildGoogleApiClient();
+
         // Retrieve data string from incoming Intent
         ServiceDAO serviceDAO = workIntent.getExtras().getParcelable("DAO");
 
@@ -29,33 +51,34 @@ public class UpdaterService extends IntentService {
                 "'Round The Corner Info", "Searching for GPS signal...");
 
         // Retrieve address location from geo-coding
-        Location destination = new Location("Dest");
+        Location destination = new Location("Destination");
         destination.setLatitude(Double.parseDouble(serviceDAO.latitude));
         destination.setLongitude(Double.parseDouble(serviceDAO.longitude));
 
-        // Create location services that poll device for gps coordinates
-        LocationListenerHandler locationListenerHandler =
-                new LocationListenerHandler();
-
-        // Listen for updates
-        LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                0, 0, locationListenerHandler);
+        // Busy wait until google client is connected
+        while(!connected){
+            try{ Thread.sleep(100); }
+            catch (InterruptedException e)
+            { e.printStackTrace(); }
+        }
+        createLocationRequest();
+        startLocationUpdates();
 
         double distanceTo = Double.MAX_VALUE;
         double distanceUntilText = Double.parseDouble(serviceDAO.distance);
 
         while(distanceTo > distanceUntilText){
 
-            // Get current location
-            Location currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            // Update
             notificationHandler.updateNotificationText(distanceTo + " meters remaining");
 
             // Set new distance
+            currentLocation = LocationServices
+                    .FusedLocationApi.getLastLocation(googleApiClient);
             distanceTo = currentLocation.distanceTo(destination);
 
             // Sleep between each update for battery life
-            try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
+            try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
         }
 
         // Once within distance, send the text message
@@ -72,4 +95,52 @@ public class UpdaterService extends IntentService {
     public UpdaterService() {
         super("UpdaterService");
     }
+
+    /**
+     * GoogleApiClient methods below this point-------
+     */
+
+    @Override
+    public void onLocationChanged(Location location) {
+        // this.currentLocation = location;
+        Log.d("debugger", "LocationChanged");
+    }
+
+    protected void createLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(500);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                this.googleApiClient, this.locationRequest, this);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        this.connected = true;
+        Log.d("debugger", "Connected to GoogleApi");
+         Location currentLocation = LocationServices.FusedLocationApi
+                .getLastLocation(this.googleApiClient);
+        if(currentLocation != null){
+            this.currentLocation = currentLocation;
+        }
+    }
+
+    protected synchronized void buildGoogleApiClient(){
+        this.googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        this.googleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {}
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {}
 }
