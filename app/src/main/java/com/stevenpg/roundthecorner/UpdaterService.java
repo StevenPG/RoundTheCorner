@@ -1,7 +1,10 @@
 package com.stevenpg.roundthecorner;
 
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +35,9 @@ public class UpdaterService extends IntentService implements
     Location currentLocation;
     boolean connected = false;
 
+    // NotificationHandler
+    NotificationHandler notificationHandler;
+
     @Override
     protected void onHandleIntent(Intent workIntent) {
 
@@ -46,13 +52,26 @@ public class UpdaterService extends IntentService implements
                         serviceDAO.phoneNumber, serviceDAO.message));
 
         // Generate the default notification
-        NotificationHandler notificationHandler = new NotificationHandler(this,
-                "'Round The Corner Info", "Searching for GPS signal...");
+        this.notificationHandler = new NotificationHandler(this,
+                "Round The Corner", "Distance Remaining: X", "Location Accuracy: X",
+                "Distance Remaining: X", "Expand for more details");
 
         // Retrieve address location from geo-coding
         Location destination = new Location("Destination");
         destination.setLatitude(Double.parseDouble(serviceDAO.latitude));
         destination.setLongitude(Double.parseDouble(serviceDAO.longitude));
+
+        // Listen for activity to close, if closed, end the service
+        BroadcastReceiver broadcastReceiver;
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d("debugger", "Received broadcast");
+                notificationHandler.closeNotification();
+                stopSelf();
+            }
+        };
+        registerReceiver(broadcastReceiver, new IntentFilter("CloseServiceNow"));
 
         // Busy wait until google client is connected
         while(!connected){
@@ -68,13 +87,18 @@ public class UpdaterService extends IntentService implements
 
         while(distanceTo > distanceUntilText){
 
-            // Update
-            notificationHandler.updateNotificationText(distanceTo + " meters remaining");
-
             // Set new distance
             currentLocation = LocationServices
                     .FusedLocationApi.getLastLocation(googleApiClient);
             distanceTo = currentLocation.distanceTo(destination);
+
+            // Update
+            notificationHandler.updateNotificationText("Round The Corner",
+                    "Distance Remaining: " + Math.round(distanceTo),
+                    "Location Accuracy: Within " +
+                            Float.toString(currentLocation.getAccuracy()) + " meters",
+                    "Distance Remaining: " + Math.round(distanceTo),
+                    "Swipe down for more details");
 
             // Sleep between each update for battery life
             try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
@@ -142,4 +166,11 @@ public class UpdaterService extends IntentService implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {}
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        notificationHandler.closeNotification();
+        sendBroadcast(new Intent("UpdateServiceSaysClose"));
+    }
 }

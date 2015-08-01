@@ -1,5 +1,6 @@
 package com.stevenpg.roundthecorner;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.support.v4.app.NotificationCompat;
@@ -12,31 +13,47 @@ import android.support.v4.app.NotificationCompat;
  */
 public class NotificationHandler {
 
-    final int notificationID = 0;
+    final int notificationID = 813;
 
     // Attributes to keep track of notifications
     NotificationManager notificationManager;
-    NotificationCompat.Builder builder;
+    Notification.Builder builder;
     Context context;
 
     // Build and display the notification
-    NotificationHandler(Context context, String title, String contentText){
+    NotificationHandler(Context context, String BigTitle,
+                        String BigText, String BigSummary,
+                        String SmallTitle, String SmallText){
         this.context = context;
-        this.builder = new NotificationCompat.Builder(context)
-                .setContentTitle(title)
-                .setContentText(contentText)
+        this.builder = new Notification.Builder(context);
+        this.builder.setStyle(new Notification.BigTextStyle(builder)
+                .setBigContentTitle(BigTitle)
+                .bigText(BigText)
+                .setSummaryText(BigSummary))
+                .setContentTitle(SmallTitle)
+                .setContentText(SmallText)
+                .setPriority(2) // Maximum priority, should send to the top (low:-2 -> 2:high)
                 .setSmallIcon(R.drawable.icon);
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         this.notificationManager.notify(notificationID, this.builder.build());
     }
 
-    public void updateNotificationText(String updatedMessage){
-        this.builder.setContentText(updatedMessage);
+    public void updateNotificationText(String BigTitle,
+                                       String BigText, String BigSummary,
+                                       String SmallTitle, String SmallText){
+        this.builder.setStyle(new Notification.BigTextStyle(builder)
+                .setBigContentTitle(BigTitle)
+                .bigText(BigText)
+                .setSummaryText(BigSummary))
+                .setContentTitle(SmallTitle)
+                .setContentText(SmallText)
+                .setPriority(2) // Maximum priority, should send to the top (low:-2 -> 2:high)
+                .setSmallIcon(R.drawable.icon);
         this.notificationManager.notify(notificationID, this.builder.build());
     }
 
     public void closeNotification(){
-        this.notificationManager.cancel(this.notificationID);
+        this.notificationManager.cancelAll();
     }
 
 }

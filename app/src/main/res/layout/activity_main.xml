@@ -57,7 +57,8 @@
         android:layout_alignRight="@+id/DistanceEdit"
         android:layout_alignEnd="@+id/DistanceEdit"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:enabled="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -111,5 +112,19 @@
         android:layout_alignEnd="@+id/PhoneNumberEdit"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop Activity"
+        android:id="@+id/EndButton"
+        android:layout_above="@+id/StartButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/StartButton"
+        android:layout_alignEnd="@+id/EndButton"
+        android:visibility="invisible"
+        android:onClick="stopClick"
+        android:nestedScrollingEnabled="false" />
 
 </RelativeLayout>

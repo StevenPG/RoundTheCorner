@@ -27,6 +27,7 @@ public class MainActivity extends ActionBarActivity {
 
     // ButtonHandler for global access and clean interaction
     ButtonHandler button;
+    ButtonHandler stopButton;
 
     // Broadcaster for use in other methods
     BroadcastReceiver broadcastReceiver;
@@ -41,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
 
         // Assign button globally
         button = new ButtonHandler((Button)findViewById(R.id.StartButton));
+        this.stopButton = new ButtonHandler((Button)findViewById(R.id.EndButton));
 
         // Check that GPS is on
         isGPSOn();
@@ -48,13 +50,15 @@ public class MainActivity extends ActionBarActivity {
         // Check that one network provider is on
         isNetworkOn();
 
+        // Testing Notification Handler End
+
         // Create the broadcast receiver and define properties
         this.broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d("debugger", "Received broadcast");
                 finish();
-                unregisterReceiver(this);
+                unregisterReceiver(broadcastReceiver);
             }
         };
 
@@ -86,6 +90,12 @@ public class MainActivity extends ActionBarActivity {
             this.button.enable();
         }
         else{
+            // Guarantee Start is disabled
+            this.button.disable();
+            this.button.updateText("Start New Notification");
+            this.stopButton.enable();
+            this.stopButton.showButton();
+
             // Get a location object from geocode handler
             GeoCoderHandler geoCoderHandler = validator.getGeoCoderHandler();
             Location location = geoCoderHandler.getCoords();
@@ -107,15 +117,24 @@ public class MainActivity extends ActionBarActivity {
             startService(intentService);
 
             // Hide activity and start service
-            super.onBackPressed();
             Log.d("debugger", "Hiding activity");
         }
+    }
+
+    public void stopClick(View v){
+        stopService(new Intent(this, UpdaterService.class));
+        sendBroadcast(new Intent("CloseServiceNow"));
+        finish();
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        unregisterReceiver(this.broadcastReceiver);
+        try {
+            unregisterReceiver(broadcastReceiver);
+        } catch (IllegalArgumentException e){
+            Log.d("debugger", "Destroyed");
+        }
     }
 
     // Check if GPS is running
