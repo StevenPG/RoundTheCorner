@@ -47,7 +47,6 @@ public class MainActivity extends ActionBarActivity {
                 Log.d("debugger", "Received broadcast");
                 finish();
                 unregisterReceiver(this);
-                System.exit(0);
             }
         };
 

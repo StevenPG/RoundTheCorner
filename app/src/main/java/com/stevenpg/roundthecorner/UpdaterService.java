@@ -40,21 +40,26 @@ public class UpdaterService extends IntentService {
         // Listen for updates
         LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                20, 5, locationListenerHandler);
+                0, 0, locationListenerHandler);
 
-        Location currentLocation = locationListenerHandler.getCurrentLocation();
-
-        double distanceTo = currentLocation.distanceTo(destination);
+        double distanceTo = Double.MAX_VALUE;
         double distanceUntilText = Double.parseDouble(serviceDAO.distance);
 
         while(distanceTo > distanceUntilText){
-            Log.d("debugger", "Not yet within distance: " + distanceTo + " " + distanceUntilText);
-            currentLocation = locationListenerHandler.getCurrentLocation();
-            Log.d("debugger", "GPS: " + currentLocation.getLatitude() +
-                    "," + currentLocation.getLongitude());
+
+            // Get current location
+            Location currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            notificationHandler.updateNotificationText(distanceTo + " meters remaining");
+
+            // Set new distance
+            distanceTo = currentLocation.distanceTo(destination);
+
+            // Sleep between each update for battery life
+            try { Thread.sleep(1000); } catch (InterruptedException e) {}
         }
 
-        Log.d("debugger", "Within distance, sending text");
+        // Once within distance, send the text message
+        textSender.sendText();
 
         // Close activity, notifiation, and service when finished
         Log.d("debugger", "Sending broadcast");

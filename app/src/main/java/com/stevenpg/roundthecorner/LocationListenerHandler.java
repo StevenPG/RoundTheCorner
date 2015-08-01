@@ -13,42 +13,23 @@ import android.util.Log;
  */
 public class LocationListenerHandler implements LocationListener {
 
-    private Location currentLocation;
-
-    LocationListenerHandler(){
-        currentLocation = new Location("null");
-    }
-
     @Override
     public void onLocationChanged(Location location) {
-        Log.d("debug", location.getLatitude() + ", " + location.getLongitude());
-        currentLocation = new Location("Available");
-        currentLocation.setLatitude(location.getLatitude());
-        currentLocation.setLongitude(location.getLongitude());
-        currentLocation.setAccuracy(location.getAccuracy());
-    }
-
-    public Location getCurrentLocation(){
-        return currentLocation;
+        Log.d("debugger", location.getLatitude() + ", " + location.getLongitude());
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        if(status == 0){
-            currentLocation.setProvider("GPS Temporarily Unavailable");
-        }
-        if(status == 2){
-            currentLocation.setProvider("Available");
-        }
+        // called when status changes
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-
+        // called when the GPS provider is turned on (user turning on the GPS on the phone)
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
+        // called when the status of the GPS provider changes
     }
 }
