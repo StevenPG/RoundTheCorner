@@ -20,7 +20,7 @@ public class UpdaterService extends IntentService {
         // Retrieve data string from incoming Intent
         ServiceDAO serviceDAO = workIntent.getExtras().getParcelable("DAO");
 
-        // Create text messager object
+        // Create text messenger object
         TextSender textSender = new TextSender(new TextRecipient(
                         serviceDAO.phoneNumber, serviceDAO.message));
 
@@ -28,7 +28,7 @@ public class UpdaterService extends IntentService {
         NotificationHandler notificationHandler = new NotificationHandler(this,
                 "'Round The Corner Info", "Searching for GPS signal...");
 
-        // Retrieve address location from geocoding
+        // Retrieve address location from geo-coding
         Location destination = new Location("Dest");
         destination.setLatitude(Double.parseDouble(serviceDAO.latitude));
         destination.setLongitude(Double.parseDouble(serviceDAO.longitude));
@@ -55,13 +55,13 @@ public class UpdaterService extends IntentService {
             distanceTo = currentLocation.distanceTo(destination);
 
             // Sleep between each update for battery life
-            try { Thread.sleep(1000); } catch (InterruptedException e) {}
+            try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
         }
 
         // Once within distance, send the text message
         textSender.sendText();
 
-        // Close activity, notifiation, and service when finished
+        // Close activity, notification, and service when finished
         Log.d("debugger", "Sending broadcast");
         notificationHandler.closeNotification();
         sendBroadcast(new Intent("UpdateServiceSaysClose"));
