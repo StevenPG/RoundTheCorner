@@ -16,17 +16,19 @@ public class ServiceDAO implements Parcelable{
     public String phoneNumber;
     public String message;
     public String distance;
+    public String units;
 
     ServiceDAO(String latitude,
                String longitude,
                String phoneNumber,
                String message,
-               String distance){
+               String distance, String units){
         this.latitude = latitude;
         this.longitude = longitude;
         this.phoneNumber = phoneNumber;
         this.message = message;
         this.distance = distance;
+        this.units = units;
     }
 
     public static ServiceDAO readFromParcel(Parcel in){
@@ -35,8 +37,9 @@ public class ServiceDAO implements Parcelable{
         String phoneNumber = in.readString();
         String message = in.readString();
         String distance = in.readString();
+        String units = in.readString();
         return new ServiceDAO(latitude, longitude,
-                phoneNumber, message, distance);
+                phoneNumber, message, distance, units);
     }
 
     @Override
@@ -46,6 +49,7 @@ public class ServiceDAO implements Parcelable{
         dest.writeString(this.phoneNumber);
         dest.writeString(this.message);
         dest.writeString(this.distance);
+        dest.writeString(this.units);
     }
 
     @Override

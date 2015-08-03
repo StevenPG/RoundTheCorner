@@ -15,8 +15,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 
 
 @SuppressWarnings("deprecation")
@@ -25,12 +33,19 @@ public class MainActivity extends ActionBarActivity {
     // Intent service
     Intent intentService;
 
+    // Filenames where data is stored for load and save
+    String ADDRESSFILE = "address_pref";
+    String NUMBERFILE = "number_pref";
+    String MESSAGEFILE = "message_pref";
+
     // ButtonHandler for global access and clean interaction
     ButtonHandler button;
-    ButtonHandler stopButton;
 
     // Broadcaster for use in other methods
     BroadcastReceiver broadcastReceiver;
+
+    // Spinner to grab from multiple places
+    Spinner spinner;
 
     /**
      * Runs when activity starts
@@ -42,7 +57,6 @@ public class MainActivity extends ActionBarActivity {
 
         // Assign button globally
         button = new ButtonHandler((Button)findViewById(R.id.StartButton));
-        this.stopButton = new ButtonHandler((Button)findViewById(R.id.EndButton));
 
         // Check that GPS is on
         isGPSOn();
@@ -50,7 +64,12 @@ public class MainActivity extends ActionBarActivity {
         // Check that one network provider is on
         isNetworkOn();
 
-        // Testing Notification Handler End
+        // Create spinner
+        this.spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.units, android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
         // Create the broadcast receiver and define properties
         this.broadcastReceiver = new BroadcastReceiver() {
@@ -69,6 +88,9 @@ public class MainActivity extends ActionBarActivity {
     // Function that kicks off everything on button click
     public void buttonClick(View v ){
         this.button.disable();
+
+        // Retrieve spinner value to set units for notification
+        String units = spinner.getSelectedItem().toString();
 
         // retrieve all UI elements relevant
         EditText addressTxt = (EditText)findViewById(R.id.AddressEdit);
@@ -93,8 +115,6 @@ public class MainActivity extends ActionBarActivity {
             // Guarantee Start is disabled
             this.button.disable();
             this.button.updateText("Start New Notification");
-            this.stopButton.enable();
-            this.stopButton.showButton();
 
             // Get a location object from geocode handler
             GeoCoderHandler geoCoderHandler = validator.getGeoCoderHandler();
@@ -106,7 +126,8 @@ public class MainActivity extends ActionBarActivity {
                     Double.toString(location.getLongitude()),
                     phoneNum,
                     message,
-                    dist
+                    dist,
+                    units
             );
 
             // Set the data and start intent service
@@ -121,11 +142,61 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    public void stopClick(View v){
-        stopService(new Intent(this, UpdaterService.class));
-        sendBroadcast(new Intent("CloseServiceNow"));
-        finish();
+    // Control each set of load and save buttons that have only 1 saved state
+    public void loadAddress(View v){
+        EditText address = (EditText)findViewById(R.id.AddressEdit);
+        loadString(ADDRESSFILE, address);
     }
+    public void loadPhoneNumber(View v){
+        EditText phone = (EditText)findViewById(R.id.PhoneNumberEdit);
+        loadString(NUMBERFILE, phone);
+    }
+    public void loadMessage(View v){
+        EditText message = (EditText)findViewById(R.id.MessageEdit);
+        loadString(MESSAGEFILE, message);
+    }
+    public void saveAddress(View v){
+        EditText address = (EditText)findViewById(R.id.AddressEdit);
+        String addressText = address.getText().toString();
+        saveString(ADDRESSFILE, addressText);
+    }
+    public void savePhoneNumber(View v){
+        EditText phone = (EditText)findViewById(R.id.PhoneNumberEdit);
+        String phoneText = phone.getText().toString();
+        saveString(NUMBERFILE, phoneText);
+    }
+    public void saveMessage(View v){
+        EditText message = (EditText)findViewById(R.id.MessageEdit);
+        String msgText = message.getText().toString();
+        saveString(MESSAGEFILE, msgText);
+    }
+
+    // Just edit the text directly through the loading
+    public void loadString(String fileName, EditText editText){
+        try {
+            FileInputStream fis = openFileInput(fileName);
+            byte fileContents[] = new byte[500];
+            fis.read(fileContents);
+            String text = new String(fileContents);
+            editText.setText(text.trim());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException io){
+            io.printStackTrace();
+        }
+    }
+
+    public void saveString(String fileName, String string){
+        try {
+            FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);
+            fos.write(string.getBytes());
+            fos.close();
+        }
+        catch (FileNotFoundException e) { e.printStackTrace(); }
+        catch (IOException io){ io.printStackTrace(); }
+    }
+
+    // End set of load and save buttons
 
     @Override
     protected void onDestroy(){

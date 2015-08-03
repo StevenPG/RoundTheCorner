@@ -56,6 +56,9 @@ public class UpdaterService extends IntentService implements
                 "Round The Corner", "Distance Remaining: X", "Location Accuracy: X",
                 "Distance Remaining: X", "Expand for more details");
 
+        // Grab units field from dao
+        String units = serviceDAO.units;
+
         // Retrieve address location from geo-coding
         Location destination = new Location("Destination");
         destination.setLatitude(Double.parseDouble(serviceDAO.latitude));
@@ -90,14 +93,30 @@ public class UpdaterService extends IntentService implements
             // Set new distance
             currentLocation = LocationServices
                     .FusedLocationApi.getLastLocation(googleApiClient);
+
+            // Get data and transform based on units
             distanceTo = currentLocation.distanceTo(destination);
+            Float accuracy = currentLocation.getAccuracy();
+
+            // Actually transform based on units
+            if("feet".equals(units)){
+                distanceTo = distanceTo * 3.28084;
+                accuracy = accuracy * 3.28084F;
+            }
+            if("meters".equals(units)){
+                // Do nothing
+            }
+            if("yards".equals(units)){
+                distanceTo = distanceTo * 1.09361;
+                accuracy = accuracy * 1.09361F;
+            }
 
             // Update
             notificationHandler.updateNotificationText("Round The Corner",
-                    "Distance Remaining: " + Math.round(distanceTo),
+                    "Distance Remaining: " + Math.round(distanceTo) + " " + units,
                     "Location Accuracy: Within " +
-                            Float.toString(currentLocation.getAccuracy()) + " meters",
-                    "Distance Remaining: " + Math.round(distanceTo),
+                            Float.toString(accuracy) + " " + units,
+                    "Distance: " + Math.round(distanceTo) + " " + units,
                     "Swipe down for more details");
 
             // Sleep between each update for battery life

@@ -11,41 +11,47 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Address"
+        android:text="     Address"
         android:id="@+id/AddressLabel"
+        android:textColor="#ffffffff"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="#ffffffff" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Phone Number"
+        android:text="     Phone Number"
         android:id="@+id/PhoneNumberLabel"
         android:textColor="#ffffffff"
         android:layout_below="@+id/AddressEdit"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Message"
+        android:text="     Message"
         android:id="@+id/Message"
         android:textColor="#ffffffff"
-        android:layout_below="@+id/DistanceEdit"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Distance in Meters"
+        android:text="     Distance in"
         android:id="@+id/Distance"
         android:textColor="#ffffffff"
-        android:layout_below="@+id/PhoneNumberEdit"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/PhoneLoadButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/StartButton"
+        android:layout_alignEnd="@+id/StartButton" />
 
     <Button
         android:layout_width="wrap_content"
@@ -54,11 +60,11 @@
         android:id="@+id/StartButton"
         android:onClick="buttonClick"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/DistanceEdit"
-        android:layout_alignEnd="@+id/DistanceEdit"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:enabled="true" />
+        android:enabled="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -67,11 +73,11 @@
         android:maxLines="1"
         android:inputType="textPostalAddress"
         android:layout_below="@+id/AddressLabel"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textColor="#ffffffff" />
+        android:textColor="#ffffffff"
+        android:layout_toLeftOf="@+id/PhoneLoadButton"
+        android:layout_toStartOf="@+id/PhoneLoadButton" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -79,13 +85,13 @@
         android:id="@+id/PhoneNumberEdit"
         android:inputType="number"
         android:maxLines="1"
-        android:layout_below="@+id/PhoneNumberLabel"
-        android:layout_alignRight="@+id/AddressEdit"
-        android:layout_alignEnd="@+id/AddressEdit"
+        android:textColor="#ffffffff"
+        android:phoneNumber="false"
+        android:layout_alignTop="@+id/PhoneLoadButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textColor="#ffffffff"
-        android:phoneNumber="false" />
+        android:layout_alignRight="@+id/AddressEdit"
+        android:layout_alignEnd="@+id/AddressEdit" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -94,9 +100,11 @@
         android:inputType="number"
         android:maxLines="1"
         android:textColor="#ffffffff"
+        android:text="50"
+        android:textAlignment="center"
         android:layout_below="@+id/Distance"
-        android:layout_alignRight="@+id/MessageEdit"
-        android:layout_alignEnd="@+id/MessageEdit"
+        android:layout_alignRight="@+id/Distance"
+        android:layout_alignEnd="@+id/Distance"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -108,23 +116,87 @@
         android:scrollHorizontally="false"
         android:textColor="#ffffffff"
         android:layout_below="@+id/Message"
-        android:layout_alignRight="@+id/PhoneNumberEdit"
-        android:layout_alignEnd="@+id/PhoneNumberEdit"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Stop Activity"
-        android:id="@+id/EndButton"
-        android:layout_above="@+id/StartButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/StartButton"
-        android:layout_alignEnd="@+id/EndButton"
-        android:visibility="invisible"
-        android:onClick="stopClick"
+        android:layout_alignRight="@+id/spinner"
+        android:layout_alignEnd="@+id/spinner" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/PhoneSaveButton"
+        android:layout_below="@+id/PhoneNumberLabel"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="savePhoneNumber" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Load"
+        android:id="@+id/PhoneLoadButton"
+        android:layout_alignTop="@+id/PhoneSaveButton"
+        android:layout_toLeftOf="@+id/PhoneSaveButton"
+        android:layout_toStartOf="@+id/PhoneSaveButton"
+        android:onClick="loadPhoneNumber" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Load"
+        android:id="@+id/AddressLoadButton"
+        android:layout_alignTop="@+id/AddressSaveButton"
+        android:layout_toLeftOf="@+id/AddressSaveButton"
+        android:layout_toStartOf="@+id/AddressSaveButton"
+        android:onClick="loadAddress"
         android:nestedScrollingEnabled="false" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/AddressSaveButton"
+        android:layout_alignTop="@+id/AddressEdit"
+        android:layout_alignRight="@+id/PhoneSaveButton"
+        android:layout_alignEnd="@+id/PhoneSaveButton"
+        android:onClick="saveAddress" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:background="@color/wallet_bright_foreground_holo_dark"
+        android:layout_alignTop="@+id/Distance"
+        android:layout_toRightOf="@+id/PhoneNumberLabel"
+        android:layout_alignRight="@+id/Distance"
+        android:layout_alignEnd="@+id/Distance"
+        android:layout_above="@+id/DistanceEdit" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Load"
+        android:id="@+id/MessageLoadButton"
+        android:layout_below="@+id/DistanceEdit"
+        android:layout_toLeftOf="@+id/PhoneSaveButton"
+        android:layout_toStartOf="@+id/PhoneSaveButton"
+        android:onClick="loadMessage" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/MessageSaveButton"
+        android:layout_below="@+id/DistanceEdit"
+        android:layout_alignLeft="@+id/PhoneSaveButton"
+        android:layout_alignStart="@+id/PhoneSaveButton"
+        android:onClick="saveMessage" />
 
 </RelativeLayout>
