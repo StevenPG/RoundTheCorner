@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -139,6 +140,26 @@ public class MainActivity extends ActionBarActivity {
 
             // Hide activity and start service
             Log.d("debugger", "Hiding activity");
+        }
+    }
+
+    // Control which buttons are available, LOAD by default
+    public void enableSave(View v){
+        Switch saveSwitch = (Switch) findViewById(R.id.switch1);
+        Button address = (Button) findViewById(R.id.AddressSaveButton);
+        Button phone = (Button) findViewById(R.id.PhoneSaveButton);
+        Button message = (Button) findViewById(R.id.MessageSaveButton);
+        if(saveSwitch.isChecked()){
+            // Save is enabled
+            address.setEnabled(true);
+            phone.setEnabled(true);
+            message.setEnabled(true);
+        }
+        else{
+            // Disable saves
+            address.setEnabled(false);
+            phone.setEnabled(false);
+            message.setEnabled(false);
         }
     }
 

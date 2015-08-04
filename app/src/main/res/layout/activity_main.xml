@@ -130,7 +130,8 @@
         android:layout_below="@+id/PhoneNumberLabel"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:onClick="savePhoneNumber" />
+        android:onClick="savePhoneNumber"
+        android:enabled="false" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -164,7 +165,8 @@
         android:layout_alignTop="@+id/AddressEdit"
         android:layout_alignRight="@+id/PhoneSaveButton"
         android:layout_alignEnd="@+id/PhoneSaveButton"
-        android:onClick="saveAddress" />
+        android:onClick="saveAddress"
+        android:enabled="false" />
 
     <Spinner
         android:layout_width="wrap_content"
@@ -197,6 +199,20 @@
         android:layout_below="@+id/DistanceEdit"
         android:layout_alignLeft="@+id/PhoneSaveButton"
         android:layout_alignStart="@+id/PhoneSaveButton"
-        android:onClick="saveMessage" />
+        android:onClick="saveMessage"
+        android:enabled="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enable Save"
+        android:id="@+id/switch1"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/AddressSaveButton"
+        android:layout_alignEnd="@+id/AddressSaveButton"
+        android:onClick="enableSave"
+        android:enabled="true"
+        android:checked="false"
+        android:textColor="#ffffffff" />
 
 </RelativeLayout>
