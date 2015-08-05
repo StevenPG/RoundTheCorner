@@ -33,7 +33,7 @@ public class NotificationHandler {
                 .setContentTitle(SmallTitle)
                 .setContentText(SmallText)
                 .setPriority(2) // Maximum priority, should send to the top (low:-2 -> 2:high)
-                .setSmallIcon(R.drawable.icon);
+                .setSmallIcon(R.mipmap.ic_launcher);
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         this.notificationManager.notify(notificationID, this.builder.build());
     }
@@ -48,7 +48,7 @@ public class NotificationHandler {
                 .setContentTitle(SmallTitle)
                 .setContentText(SmallText)
                 .setPriority(2) // Maximum priority, should send to the top (low:-2 -> 2:high)
-                .setSmallIcon(R.drawable.icon);
+                .setSmallIcon(R.mipmap.ic_launcher);
         this.notificationManager.notify(notificationID, this.builder.build());
     }
 
