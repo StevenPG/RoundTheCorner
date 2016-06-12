@@ -15,7 +15,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 /**
@@ -24,10 +25,23 @@ import android.widget.ProgressBar;
  */
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * Button held classwide for easy access
+     */
+    Button startButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Setup button
+        startButton = (Button) findViewById(R.id.button);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v){
+                startActivity(ActivityManager.openAddressActivity(getApplicationContext()));
+            }
+        });
     }
 
     @Override
@@ -43,14 +57,25 @@ public class MainActivity extends AppCompatActivity {
      */
     protected void runProgress(){
         final ProgressBar mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        final int currentProgress = 0;
-        final Handler mHandler = new Handler();
 
         // Start the background update thread
         new Thread(new Runnable() {
             @Override
             public void run() {
+                try {
+                    mProgressBar.incrementProgressBy(25);
+                    Thread.sleep(500);
+                    mProgressBar.incrementProgressBy(25);
+                    Thread.sleep(500);
+                    mProgressBar.incrementProgressBy(25);
+                    Thread.sleep(500);
+                    mProgressBar.incrementProgressBy(25);
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
+                /*
                 // Check if network provider is active
                 String network = isNetworkOn();
                 if(network.equals("MOBILE") || network.equals("WIFI")){
@@ -62,9 +87,16 @@ public class MainActivity extends AppCompatActivity {
                 // Check if GPS is on
                 if(!isGPSOn()){
 
-                }
+                }*/
             }
         }).start();
+
+        while(true){
+            if(mProgressBar.getProgress() == 100){
+                startButton.setEnabled(true);
+                return;
+            }
+        }
     }
 
     /**
@@ -72,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
      * @return gps status
      */
     protected boolean isGPSOn(){
-
         return true;
     }
 
@@ -95,5 +126,4 @@ public class MainActivity extends AppCompatActivity {
         // If no NPE occurred
         return getTypeName;
     }
-
 }
