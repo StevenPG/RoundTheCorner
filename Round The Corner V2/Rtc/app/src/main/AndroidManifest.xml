@@ -55,6 +55,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.stevengantz.rtc.ContactActivity" />
         </activity>
+        <activity android:name=".MessageActivity"></activity>
     </application>
 
 </manifest>

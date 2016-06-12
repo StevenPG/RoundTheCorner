@@ -2,6 +2,7 @@ package com.stevengantz.rtc;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Message;
 
 /**
  * @author Steven Gantz
@@ -22,5 +23,9 @@ public class ActivityManager {
 
     public static Intent openDistanceActivity(Context context){
         return new Intent(context, DistanceActivity.class);
+    }
+
+    public static Intent openMessageActivity(Context context){
+        return new Intent(context, MessageActivity.class);
     }
 }

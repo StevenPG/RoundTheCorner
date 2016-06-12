@@ -51,6 +51,13 @@
             android:layout_gravity="bottom"
             android:background="#ffffff" />
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Next"
+            android:id="@+id/nextDistanceButton"
+            android:layout_gravity="center_horizontal" />
+
     </LinearLayout>
 
 </LinearLayout>

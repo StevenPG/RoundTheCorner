@@ -6,6 +6,7 @@ import android.support.v4.widget.TextViewCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -39,6 +40,15 @@ public class DistanceActivity extends FragmentActivity implements OnMapReadyCall
         // Get text describing distance
         final TextView textView = (TextView) findViewById(R.id.disttext);
 
+        // Retrieve Button
+        Button next = (Button) findViewById(R.id.nextDistanceButton);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(ActivityManager.openMessageActivity(getApplicationContext()));
+            }
+        });
+
         // Retrieve Spinner
         final Spinner options = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -46,6 +56,7 @@ public class DistanceActivity extends FragmentActivity implements OnMapReadyCall
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         options.setAdapter(adapter);
 
+        // Retrieve seekbar
         SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -82,12 +93,19 @@ public class DistanceActivity extends FragmentActivity implements OnMapReadyCall
                 if(options.getSelectedItem().toString().equals("Meters")){
                     // Meters 15 - 750
                     savedProgress = (int) Math.round(seekBar.getProgress()*7.35+15);
+                    DataHandler.distance = String.valueOf(savedProgress);
                 } else if(options.getSelectedItem().toString().equals("Feet")){
                     // Feet 20 - 1000;
+                    savedProgress = (int) (Math.round(seekBar.getProgress()*9.8+20) * .3048);
+                    DataHandler.distance = String.valueOf(savedProgress);
                 } else if(options.getSelectedItem().toString().equals("Kilometers")){
                     // Kilometers 1 - 20
+                    savedProgress = (int) (Math.round(seekBar.getProgress()*0.19)*1000);
+                    DataHandler.distance = String.valueOf(savedProgress);
                 } else if(options.getSelectedItem().toString().equals("Miles")){
                     // Miles 1 - 15
+                    savedProgress = (int) (Math.round(seekBar.getProgress()*0.14)*1609.34);
+                    DataHandler.distance = String.valueOf(savedProgress);
                 } else {
                     assert false;
                 }
