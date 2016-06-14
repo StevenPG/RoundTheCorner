@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="a78183f30e769a98ab4820794f597763088d3065">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-base-7.5.0_244b65d6d95df11c561eacad55a7daf226d54308\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="29ebc7e04d877062317c8cc0e68b20f0c1fcda66">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-ads-7.5.0_89d7afbbf84dd5a8b3547b6549ce20603452c577\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="1e98ef3f124bb7a11f8575f9ff5dfea330b61b6f">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-location-7.5.0_074c3de74e07af165122ab1e7cc699cceea06916\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-gcm\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="8d736fefa22d896e84a268354b3ed48a42663150">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-gcm-7.5.0_a9ce9fb8ccf395f641a21685f0b33a733ee76663\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="06a42becc33232ec0ee125161da68c1829c9f8fd">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-maps-7.5.0_a0c32cc140f2e30abeea38a18d441c5ad23c8d8e\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\22.2.1\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="4486e953d1f35f8ccab098b1dd67146366d5f731">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-22.2.1_214b4c32d52ae3440476275af3ed5a6abe3a9751\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appstate\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="68c140702c7242d914655bcb3164d9e8c45b84cb">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-appstate-7.5.0_d17839f63bd1f27043ce4810173e03025cb68c54\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.1\jars\libs\internal_impl-22.2.1.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="c471eaaba13ff64f6e0383d1c30a9cdc9a97efeb">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-22.2.1_6bc480ceed00dd7f2313e6c316c5924468ab1f3e\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-nearby\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="6440e5e5cfe368f9bff3c537fb8988048069cb33">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-nearby-7.5.0_e0410facc3eefaf057327e2e0e7322e69a06653e\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="f02127a85abd52a2cd526d4c2409f21969f80ee8">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-appindexing-7.5.0_f729211374e68e7da7d11d5726a5b4d113ecd23e\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="02bac2dc792d78241077861566f2c82da955e7fa">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-games-7.5.0_b60181e056d40e3f19eec1ff3f822e8104e8a74a\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appinvite\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="63ec6e9f4fe5482a7447d0f3091b8e543a02554c">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-appinvite-7.5.0_b4c854a075430f92a1bf8a5d4cf30acc0262e088\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wallet\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="6836d188602ec5382d1967c58b00960eb8ff8773">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-wallet-7.5.0_cf6c73516bf0e5cafbc909cacfaf5a8dc842613d\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\22.0.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="a1372c17fccacca753d3951d3ad820571cbce075">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-mediarouter-v7-22.0.0_00d67fd1e3625aa722f3c86737727403a50f5e19\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\22.0.0\jars\libs\internal_impl-22.0.0.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="ba3df4eb0a630d7de294f0e48d3f9267d279b784">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-22.0.0_626c4c49a55efe26bf9eee014822ac59454d482f\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="1a6411087ab88ce5542f593e63a2752b6b0d6f1a">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-safetynet-7.5.0_7bb99ee74a63fa1a1833417ae04679be55983d93\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="e7b35244f50663b3f8d150714bca9ecd7a290da1">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-analytics-7.5.0_207f1086cfa527a96ff06cd587e521f281c7e760\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="d97798b201e696f12763c2f0f46889439c3d6ef4">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_8da880524a572842b3dfb10a63edafe2daded866\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="d405025c600055237c171a0bbabaa49d69696573">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-identity-7.5.0_a3be0d7e72da5e2d76a39242c6218a941339baac\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Android\Components\extras\android\m2repository\com\android\support\support-annotations\22.2.1\support-annotations-22.2.1.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="61a0ff5c29295ec56d7e0bd3d25d95dbf71b4b2b">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-22.2.1_3b761372ee3d8b642d0bd33f94194e787665cc5e\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.1\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="f8efd0096475e0daf054267b61544e10dc776503">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-22.2.1_723eefe26530f73ab1f6340f2a4ed3ea48329bf2\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="8e3a972f28b8bae817e382257ba177a31bcadbbc">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-cast-7.5.0_0f458c6e18a2f4f490e6ee6da01a3a0978b5b6ea\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="2f85c6e9be700fd04be2d8b733d2f4b0cf901b3d">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_cbe416ee7de74642db418a8cf192ebf456ddca08\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-fitness\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="a172852a35ff919e85b9b7f14bbc15c5bee25520">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-fitness-7.5.0_65ceed9e7bc6c16303e72fe6bc1268801bc1afe9\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="69dd177337ead693c408c8dddc9546bb6f1244fa">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-wearable-7.5.0_fbf4202e5479fdbc8e6b66e2072e57948699b4fb\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="f44d03c138cb6488fdbaa65e3a7e5878861a56d8">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-drive-7.5.0_846d6911997a81feb4318dd08de549fd6e1132c1\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-panorama\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="ba207be21987c11b37d9f8faa08ed6e722569f30">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-panorama-7.5.0_5d3e9e495d255006d2018bb925887dd795784368\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-plus\7.5.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="272bc5d7063f24bc3a33ea1d318cde8f31f5ec4c">
+        <dex dex="C:\Users\Tyrsn\Development Tools\Repositories\RoundTheCorner\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-plus-7.5.0_e92ae9b3e272352fa20a24a3a5f08e1dadefdd71\classes.dex" />
+    </item>
+
+</items>

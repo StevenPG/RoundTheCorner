@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">\'Round The Corner</string>
+    <string name="action_settings">Settings</string>
+    <string name="service_name">UpdateService</string>
+    <string-array name="units">
+        <item>feet</item>
+        <item>meters</item>
+        <item>yards</item>
+    </string-array>
+</resources>
