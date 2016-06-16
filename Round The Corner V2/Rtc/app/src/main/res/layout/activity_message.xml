@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:ems="10"
-        android:id="@+id/editText5"
+        android:id="@+id/MsgEditText"
         android:layout_below="@+id/MsgDesc"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -88,8 +88,8 @@
         android:text="Start Notification"
         android:id="@+id/startButton"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/editText5"
-        android:layout_alignEnd="@+id/editText5"
+        android:layout_alignRight="@+id/MsgEditText"
+        android:layout_alignEnd="@+id/MsgEditText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 

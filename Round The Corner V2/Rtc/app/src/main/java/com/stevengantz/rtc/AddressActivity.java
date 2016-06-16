@@ -2,6 +2,8 @@ package com.stevengantz.rtc;
 
 import android.content.Context;
 import android.location.Geocoder;
+import android.location.Location;
+import android.provider.ContactsContract;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -91,6 +93,9 @@ public class AddressActivity extends FragmentActivity implements OnMapReadyCallb
                                         new LatLng(address.get(0).getLatitude(),
                                                 address.get(0).getLongitude()), 15, 0, 0)));
                         DataHandler.address = address.get(0);
+                        DataHandler.enteredLocation = new Location("User Entered");
+                        DataHandler.enteredLocation.setLatitude(DataHandler.address.getLatitude());
+                        DataHandler.enteredLocation.setLongitude(DataHandler.address.getLongitude());
                         // Enable next button
                         next.setEnabled(true);
                     } else {

@@ -19,11 +19,13 @@ public class MessageActivity extends AppCompatActivity {
         EditText phone = (EditText) findViewById(R.id.PhoneText);
         EditText addr = (EditText) findViewById(R.id.AddrText);
         EditText dist = (EditText) findViewById(R.id.DistText);
+        final EditText msgTxt = (EditText) findViewById(R.id.MsgEditText);
 
         // If they are null, something is wrong with the view
         if (phone == null) throw new AssertionError();
         if (addr == null) throw new AssertionError();
         if (dist == null) throw new AssertionError();
+        if (msgTxt == null) throw new AssertionError();
 
         phone.setText(DataHandler.phoneNumber);
         addr.setText(DataHandler.address.getAddressLine(0));
@@ -54,6 +56,9 @@ public class MessageActivity extends AppCompatActivity {
         startNotif.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Save the message
+                DataHandler.msg = msgTxt.getText().toString();
+
                 // Disable the button while the notification exists
                 startNotif.setEnabled(false);
 

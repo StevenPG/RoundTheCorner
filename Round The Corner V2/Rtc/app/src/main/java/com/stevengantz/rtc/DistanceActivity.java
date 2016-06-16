@@ -94,18 +94,22 @@ public class DistanceActivity extends FragmentActivity implements OnMapReadyCall
                     // Meters 15 - 750
                     savedProgress = (int) Math.round(seekBar.getProgress()*7.35+15);
                     DataHandler.distance = String.valueOf(savedProgress);
+                    DataHandler.units = "Meters";
                 } else if(options.getSelectedItem().toString().equals("Feet")){
                     // Feet 20 - 1000;
                     savedProgress = (int) (Math.round(seekBar.getProgress()*9.8+20) * .3048);
                     DataHandler.distance = String.valueOf(savedProgress);
+                    DataHandler.units = "Feet";
                 } else if(options.getSelectedItem().toString().equals("Kilometers")){
                     // Kilometers 1 - 20
                     savedProgress = (int) (Math.round(seekBar.getProgress()*0.19)*1000);
                     DataHandler.distance = String.valueOf(savedProgress);
+                    DataHandler.units = "Kilometers";
                 } else if(options.getSelectedItem().toString().equals("Miles")){
                     // Miles 1 - 15
                     savedProgress = (int) (Math.round(seekBar.getProgress()*0.14)*1609.34);
                     DataHandler.distance = String.valueOf(savedProgress);
+                    DataHandler.units = "Miles";
                 } else {
                     assert false;
                 }
