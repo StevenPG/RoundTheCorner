@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -120,7 +119,9 @@ public class UpdateService extends IntentService implements GoogleApiClient.Conn
                     );
 
                     // Check if within bounds, if so, send message.
-                    if(totalDistance < Integer.parseInt(DataHandler.distance)){
+                    Log.v("distCheck", "Total Distance: " + totalDistance + " in " + DataHandler.units);
+                    Log.v("distCheck", "Distance from Location: " + DataHandler.distance);
+                    if(totalDistance*1609.34 < Integer.parseInt(DataHandler.distance)){
                         SmsManager smsManager = SmsManager.getDefault();
                         Log.v("msg", "Sending Text Message...");
                         if(DataHandler.msg == null || DataHandler.msg.equals("")){
